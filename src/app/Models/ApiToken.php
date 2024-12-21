@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 class ApiToken extends Model
 {
   use Prunable;
+
+  const CREATED_AT = 'created_timestamp';
+  const UPDATED_AT = 'updated_timestamp';
+  const EXPIRE_AFTER_40_MINUTES = 40;
+
   /**
    * The table associated with the model.
    *
@@ -28,9 +33,12 @@ class ApiToken extends Model
    */
   protected $fillable = ["token"];
 
-  const CREATED_AT = 'created_timestamp';
-  const UPDATED_AT = 'updated_timestamp';
-  const EXPIRE_AFTER_40_MINUTES = 40;
+  /**
+   * The storage format of the model's date columns.
+   *
+   * @var string
+   */
+  protected $dateFormat = 'U';
 
   /**
    * Get the prunable model query.
