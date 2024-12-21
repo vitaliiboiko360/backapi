@@ -1,9 +1,14 @@
 <?php
 
+use App\Models\ApiToken;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
+use Illuminate\Support\Facades\DB;
+
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,20 +26,24 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 // });
 
 Route::get("/user", function (Request $request) {
-    return $request->user();
+  return $request->user();
 })->middleware('auth.basic.once');
 
 Route::get("/test", function () {
-    return new JsonResponse("Hello, API");
+  return new JsonResponse("Hello, API");
 });
 
 Route::get("/token", function () {
-    return new JsonResponse([
-      "sucess"=>true,
-      "token"=>
-    ]);
+  $newToken = Str::random(128);
+  ApiToken::create([
+    'token' => $newToken,
+  ]);
+  return new JsonResponse([
+    "sucess" => true,
+    "token" => $newToken,
+  ]);
 });
 
 Route::get("/test/error", function () {
-    throw new BadRequestHttpException("Test Error Trace");
+  throw new BadRequestHttpException("Test Error Trace");
 });
