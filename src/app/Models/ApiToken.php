@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
+
 class ApiToken extends Model
 {
   use Prunable;
@@ -20,12 +23,14 @@ class ApiToken extends Model
    * @var string
    */
   protected $table = 'api_tokens';
+
   /**
    * The primary key associated with the table.
    *
    * @var string
    */
   protected $primaryKey = 'token_id';
+
   /**
    * The attributes that are mass assignable.
    *
@@ -40,11 +45,17 @@ class ApiToken extends Model
    */
   protected $dateFormat = 'U';
 
-  /**
-   * Get the prunable model query.
-   */
   public function prunable(): Builder
   {
     return static::where(self::CREATED_AT, '<=', now()->addMinutes(self::EXPIRE_AFTER_40_MINUTES));
+  }
+
+  public function createTokenAndReturnAsJson(): JsonResponse
+  {
+    $newToken = Str::random(128);
+    return new JsonResponse([
+      "sucess" => true,
+      "token" => $newToken,
+    ]);
   }
 }
