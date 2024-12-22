@@ -1,10 +1,12 @@
 <?php
 
-use App\Models\ApiToken;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +27,9 @@ Route::get("/test", function () {
   return new JsonResponse("Hello, API");
 });
 
-Route::get("/token", [ApiToken::class, 'createTokenAndReturnAsJson']);
+Route::get("/token", [ApiTokenController::class, 'createTokenAndReturnAsJson']);
+
+Route::post("/users", [UserController::class, 'store']);
 
 Route::get("/test/error", function () {
   throw new BadRequestHttpException("Test Error Trace");

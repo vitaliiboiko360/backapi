@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
 class ApiToken extends Model
 {
   use Prunable;
 
+  const TOKEN_LENGTH = 128;
   const CREATED_AT = 'created_timestamp';
   const UPDATED_AT = 'updated_timestamp';
   const EXPIRE_AFTER_40_MINUTES = 40;
@@ -45,17 +45,14 @@ class ApiToken extends Model
    */
   protected $dateFormat = 'U';
 
+  function __construct()
+  {
+    parent::__construct();
+    $this->token = Str::random(self::TOKEN_LENGTH);
+  }
+
   public function prunable(): Builder
   {
     return static::where(self::CREATED_AT, '<=', now()->addMinutes(self::EXPIRE_AFTER_40_MINUTES));
-  }
-
-  public function createTokenAndReturnAsJson(): JsonResponse
-  {
-    $newToken = Str::random(128);
-    return new JsonResponse([
-      "sucess" => true,
-      "token" => $newToken,
-    ]);
   }
 }
