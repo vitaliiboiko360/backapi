@@ -33,7 +33,7 @@ class UserController extends Controller
   {
     // Validate and store the user...
     try {
-      $validated = $request->validated();
+      $validated = $request->validated($request->messages());
       $newUser = User::create([
         'name' => $validated['name'],
         'email' => $validated['email'],

@@ -7,6 +7,13 @@ use  Illuminate\Contracts\Validation\Validator;
 
 class StoreUserRequest extends FormRequest
 {
+  const VALIDATION_ERROR_NAME = 'The name must be at least 2 and at most 60 characters long.';
+  const VALIDATION_ERROR_EMAIL = 'The email must be a valid email address.';
+  const VALIDATION_ERROR_PHONE_REQUIRED = 'The phone field is required';
+  const VALIDATION_ERROR_PHONE_FORMAT = 'Phone number should start with code of Ukraine +380 and contain 9 digits after code.';
+  const VALIDATION_ERROR_POSITION_ID = 'The position id must be an integer.';
+  const VALIDATION_ERROR_PHOTO_SIZE = 'The photo may not be greater than 5 Mbytes.';
+
   public function __construct()
   {
     parent::__construct();
@@ -51,11 +58,15 @@ class StoreUserRequest extends FormRequest
   public function messages()
   {
     return [
-      'name.required' => 'The name must be at least 2 and at most 60 characters long.',
-      'email.required' => 'The email must be a valid email address.',
-      'phone.required' => 'The phone field is required. Number should start with code of Ukraine +380.',
-      'position_id' => 'The position id must be an integer.',
-      'photo' => 'The photo may not be greater than 5 Mbytes.',
+      'name.required' => self::VALIDATION_ERROR_NAME,
+      'name.min' => self::VALIDATION_ERROR_NAME,
+      'name.max' => self::VALIDATION_ERROR_NAME,
+      'email.required' => self::VALIDATION_ERROR_EMAIL,
+      'email.email' => self::VALIDATION_ERROR_EMAIL,
+      'phone.required' => self::VALIDATION_ERROR_PHONE_FORMAT,
+      'phone.regex' => self::VALIDATION_ERROR_PHONE_FORMAT,
+      'position_id' => self::VALIDATION_ERROR_POSITION_ID,
+      'photo' => self::VALIDATION_ERROR_PHOTO_SIZE,
     ];
   }
 
