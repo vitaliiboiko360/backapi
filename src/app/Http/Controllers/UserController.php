@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Validation\ValidationException;
 
+use Illuminate\Http\JsonResponse;
+
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 
@@ -39,7 +41,13 @@ class UserController extends Controller
       ]);
       $newUser->save();
     } catch (ValidationException $e) {
-      return $e::withMessages($request->messages());
+
+      $validator = $request->getValidator();
+      return new JsonResponse([
+        "sucess" => false,
+        "message" => "Validation failed",
+        "fails" => $validator->errors(),
+      ]);
     }
   }
 }

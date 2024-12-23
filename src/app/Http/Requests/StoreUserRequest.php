@@ -3,9 +3,15 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use  Illuminate\Contracts\Validation\Validator;
 
 class StoreUserRequest extends FormRequest
 {
+  public function __construct()
+  {
+    parent::__construct();
+  }
+
   /**
    * Indicates if the validator should stop on the first rule failure.
    *
@@ -51,5 +57,23 @@ class StoreUserRequest extends FormRequest
       'position_id' => 'The position id must be an integer.',
       'photo' => 'The photo may not be greater than 5 Mbytes.',
     ];
+  }
+
+  /**
+   * We have our own custom response to failed validation.
+   *
+   * @param  \Illuminate\Contracts\Validation\Validator  $validator
+   * @return void
+   *
+   * @throws \Illuminate\Validation\ValidationException
+   */
+  protected function failedValidation(Validator $validator) {}
+
+  /**
+   * @return \Illuminate\Contracts\Validation\Validator
+   */
+  public function getValidator()
+  {
+    return $this->validator;
   }
 }
