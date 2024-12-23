@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Validation\ValidationException;
 
+use App\Models\ApiToken;
+
 use Illuminate\Http\JsonResponse;
 
 use App\Http\Requests\StoreUserRequest;
@@ -24,24 +26,21 @@ class UserController extends Controller
   }
 
   /**
-   * Store a new user.
+   * Process StoreUserRequest.
    *
    * @param  \App\Http\Requests\StoreUserRequest  $request
    * @return \Illuminate\Http\Response
    */
   public function store(StoreUserRequest $request)
   {
-    // Validate and store the user...
-    try {
-      $validated = $request->validated($request->messages());
-      $newUser = User::create([
-        'name' => $validated['name'],
-        'email' => $validated['email'],
-        'phone' => $validated['phone'],
-      ]);
-      $newUser->save();
-    } catch (ValidationException $e) {
+    // authorize
+    $token = $request->input('token');
+    $isStored = ApiToken::where('token', $token);
 
+    // Validate store user request
+    try {
+      $validated = $request->validated();
+    } catch (ValidationException $e) {
       $validator = $request->getValidator();
       return new JsonResponse([
         "sucess" => false,
@@ -49,5 +48,15 @@ class UserController extends Controller
         "fails" => $validator->errors(),
       ]);
     }
+
+    // check phone email unique for each user
+
+
+    $newUser = User::create([
+      'name' => $validated['name'],
+      'email' => $validated['email'],
+      'phone' => $validated['phone'],
+    ]);
+    $newUser->save();
   }
 }
