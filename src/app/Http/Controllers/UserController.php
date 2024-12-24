@@ -15,6 +15,9 @@ use App\Models\User;
 
 class UserController extends Controller
 {
+  const SUCCESS = true;
+  const FAILURE = false;
+  const SUCCESS_MESSAGE = 'New user successfully registered';
   /**
    * Show the form to create a new user.
    *
@@ -31,20 +34,34 @@ class UserController extends Controller
    * @param  \App\Http\Requests\StoreUserRequest  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(StoreUserRequest $request)
+  public function processStoreUserRequest(StoreUserRequest $request)
   {
     // authorize
     $token = $request->input('token');
-    $isStored = ApiToken::where('token', $token);
+    $isStored = ApiToken::ofToken($token);
+    if ($isStored->get() == null) {
+      return new JsonResponse([
+        "sucess" => self::FAILURE,
+        "message" => ApiToken::TOKEN_NOT_FOUND_MESSAGE,
+      ], JsonResponse::HTTP_UNAUTHORIZED);
+    }
 
-    // Validate store user request
+    $isNotExpired = $isStored->ofNotExpired();
+    if ($isNotExpired->get() == null) {
+      return new JsonResponse([
+        "sucess" => self::FAILURE,
+        "message" => ApiToken::TOKEN_EXPIRED_MESSAGE,
+      ], JsonResponse::HTTP_UNAUTHORIZED);
+    }
+
+    // Validate store user request fields
     try {
       $validated = $request->validated();
     } catch (ValidationException $e) {
       $validator = $request->getValidator();
       return new JsonResponse([
-        "sucess" => false,
-        "message" => "Validation failed",
+        "sucess" => self::FAILURE,
+        "message" => StoreUserRequest::VALIDATION_FAILED_MESSAGE,
         "fails" => $validator->errors(),
       ]);
     }
@@ -58,5 +75,10 @@ class UserController extends Controller
       'phone' => $validated['phone'],
     ]);
     $newUser->save();
+    return new JsonResponse([
+      "sucess" => self::SUCCESS,
+      "user_id" => $newUser->id,
+      "message" => self::SUCCESS_MESSAGE,
+    ]);
   }
 }

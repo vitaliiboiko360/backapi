@@ -29,7 +29,7 @@ Route::get("/test", function () {
 
 Route::get("/token", [ApiTokenController::class, 'createTokenAndReturnAsJson']);
 
-Route::post("/users", [UserController::class, 'store']);
+Route::post("/users", [UserController::class, 'processStoreUserRequest']);
 
 Route::get("/test/error", function () {
   throw new BadRequestHttpException("Test Error Trace");

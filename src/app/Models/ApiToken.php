@@ -14,6 +14,9 @@ class ApiToken extends Model
 {
   use Prunable;
 
+  const TOKEN_NOT_FOUND_MESSAGE = 'The token is not found. Make sure to request a new token using \'/api/token\'';
+  const TOKEN_EXPIRED_MESSAGE = 'The token is expired';
+
   const TOKEN = 'token';
   const TOKEN_LENGTH = 128;
   const CREATED_AT = 'created_timestamp';
@@ -100,6 +103,6 @@ class ApiToken extends Model
    */
   public function scopeOfNotExpired($query)
   {
-    return $query->where(self::CREATED_AT, '>=', now()->subMinutes(self::EXPIRED_IF_AFTER_40_MINUTES));
+    return $query->where(self::CREATED_AT, '>=', now()->subMinutes(self::EXPIRED_IF_AFTER_40_MINUTES)->timestamp);
   }
 }

@@ -7,6 +7,7 @@ use  Illuminate\Contracts\Validation\Validator;
 
 class StoreUserRequest extends FormRequest
 {
+  const VALIDATION_FAILED_MESSAGE = 'Validation failed';
   const VALIDATION_ERROR_NAME = 'The name must be at least 2 and at most 60 characters long.';
   const VALIDATION_ERROR_EMAIL = 'The email must be a valid email address.';
   const VALIDATION_ERROR_PHONE_REQUIRED = 'The phone field is required';
