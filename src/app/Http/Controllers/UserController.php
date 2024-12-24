@@ -47,12 +47,12 @@ class UserController extends Controller
    */
   public function processStoreUserRequest(StoreUserRequest $request)
   {
-    // authorize
+    // Authorize
     $token = $request->input("token");
     $isStored = ApiToken::ofToken($token);
     if ($isStored->get() == null) {
       return new JsonResponse([
-        "sucess" => self::FAILURE,
+        "success" => self::FAILURE,
         "message" => ApiToken::TOKEN_NOT_FOUND_MESSAGE,
       ], JsonResponse::HTTP_UNAUTHORIZED);
     }
@@ -60,24 +60,24 @@ class UserController extends Controller
     $isNotExpired = $isStored->ofNotExpired();
     if ($isNotExpired->get() == null) {
       return new JsonResponse([
-        "sucess" => self::FAILURE,
+        "success" => self::FAILURE,
         "message" => ApiToken::TOKEN_EXPIRED_MESSAGE,
       ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-    // Validate store user request fields
+    // Validate StoreUserRequest fields
     try {
       $validated = $request->validated();
     } catch (ValidationException $e) {
       $validator = $request->getValidator();
       return new JsonResponse([
-        "sucess" => self::FAILURE,
+        "success" => self::FAILURE,
         "message" => StoreUserRequest::VALIDATION_FAILED_MESSAGE,
         "fails" => $validator->errors(),
       ]);
     }
 
-    // check phone email unique for each user
+    // Check phone email unique for each user
 
 
     $newUser = User::create([
@@ -87,7 +87,7 @@ class UserController extends Controller
     ]);
     $newUser->save();
     return new JsonResponse([
-      "sucess" => self::SUCCESS,
+      "success" => self::SUCCESS,
       "user_id" => $newUser->id,
       "message" => self::SUCCESS_MESSAGE,
     ]);
