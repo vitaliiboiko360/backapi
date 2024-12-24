@@ -100,7 +100,7 @@ class UserController extends Controller
    */
   private function validateUrlQueryParamsForUsersPagination(array $urlQueryParams)
   {
-    // Make falidation
+    // Make validation
     $validator = Validator::make(
       $urlQueryParams,
       $rules = [
