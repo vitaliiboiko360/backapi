@@ -28,7 +28,7 @@ class StoreUserRequest extends FormRequest
   protected $stopOnFirstFailure = false;
 
   /**
-   * Determine if the user is authorized to make this request.
+   * We have our own custom authorization in UserController.
    *
    * @return bool
    */
@@ -76,8 +76,6 @@ class StoreUserRequest extends FormRequest
    *
    * @param  \Illuminate\Contracts\Validation\Validator  $validator
    * @return void
-   *
-   * @throws \Illuminate\Validation\ValidationException
    */
   protected function failedValidation(Validator $validator) {}
 
