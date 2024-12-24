@@ -21,16 +21,14 @@ use App\Http\Controllers\UserController;
 
 Route::get("/user", function (Request $request) {
   return $request->user();
-})->middleware('auth.basic.once');
+})->middleware("auth.basic.once");
 
 Route::get("/test", function () {
   return new JsonResponse("Hello, API");
 });
 
-Route::get("/token", [ApiTokenController::class, 'createTokenAndReturnAsJson']);
+Route::get("/token", [ApiTokenController::class, "createTokenAndReturnAsJson"]);
 
-Route::post("/users", [UserController::class, 'processStoreUserRequest']);
+Route::post("/users", [UserController::class, "processStoreUserRequest"]);
 
-Route::get("/test/error", function () {
-  throw new BadRequestHttpException("Test Error Trace");
-});
+Route::get("/users", [UserController::class, "users"]);

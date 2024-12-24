@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -22,7 +23,9 @@ class UserController extends Controller
   const PAGE_NOT_FOUND_MESSAGE = "Page not found";
   const VALIDATION_FAILED_MESSAGE = "Validation failed";
 
+  // Default pagination parameters
   const PAGE_COUNT = 5;
+  const PAGE_NUMBER = 1;
 
   /**
    * Show the form to create a new user.
@@ -90,32 +93,63 @@ class UserController extends Controller
 
 
   /**
-   * @param \App\Http\Requests\Request $request
+   * @param array $urlQueryParams
    * @return array
    */
-  private function validateUrlQueryParamsForUsersPagination(Request $request)
+  private function validateUrlQueryParamsForUsersPagination(array $urlQueryParams)
   {
-    // make falidation
+    // Make falidation
+    $validator = Validator::make(
+      $urlQueryParams,
+      $rules = [
+        "count" => "numeric",
+        "page" => "numeric|min:1",
+      ],
+      $messages = [
+        "count" => "The count must be an integer.",
+        "page" => "The page must be at least 1."
+      ]
+    );
 
+    return [
+      "status" => $validator->fails() ? self::FAILURE : self::SUCCESS,
+      "resultsJsonResponse" => $validator->fails() ? new JsonResponse([
+        "success" => self::FAILURE,
+        "message" => self::VALIDATION_FAILED_MESSAGE,
+        "fails" => $validator->errors(),
+      ]) : [],
+    ];
   }
 
   /**
-   * @param \App\Http\Requests\Request $request
+   * @param \Illuminate\Http\Request $request
    * @return \Illuminate\Http\JsonResponse
    */
   public function users(Request $request)
   {
-    $count = $request->query("count");
+    $count = $request->query("count", self::PAGE_COUNT);
+    $page = $request->query("page", self::PAGE_NUMBER);
+    $urlQueryParams = [
+      "count" => $count,
+      "page" => $page,
+    ];
+    $resultValidation = $this->validateUrlQueryParamsForUsersPagination($urlQueryParams);
+    if ($resultValidation["status"] == self::FAILURE) {
+      return $resultValidation["resultsJsonResponse"];
+    }
 
-    if (is_numeric($count)) {
+    // Check if $page not overflow total pages number
+    $total = User::count();
+    $totalPages = max($total / $count, 1);
+    if ($page > $totalPages) {
       return new JsonResponse([
         "success" => self::FAILURE,
-        "message"
+        "message" => self::PAGE_NOT_FOUND_MESSAGE,
       ]);
     }
 
     $paginator = User::paginate(
-      $perPage = $count > 0 ? $count : self::PAGE_COUNT,
+      $perPage = $count,
       $columns = [
         "id",
         "name",
@@ -125,16 +159,21 @@ class UserController extends Controller
         "registration_timestamp",
         "photo",
       ],
-      $pageName = "page"
+      $pageName = "page",
+      $page = $page,
     );
 
-    return $paginator;
-
-    // $page = $request->query("page");
-
-    // return new JsonResponse([
-    //   "success" => self::FAILURE,
-    //   "message" => self::PAGE_NOT_FOUND_MESSAGE,
-    // ]);
+    return new JsonResponse([
+      "success" => self::SUCCESS,
+      "page" => $paginator->currentPage(),
+      "total_pages" => $paginator->lastPage(),
+      "total_users" => $paginator->total(),
+      "count" => $paginator->count(),
+      "links" => [
+        "next_url" => $paginator->nextPageUrl(),
+        "prev_url" => $paginator->previousPageUrl(),
+      ],
+      "users" => $paginator->items(),
+    ]);
   }
 }
