@@ -22,6 +22,8 @@ class UserController extends Controller
   const SUCCESS_MESSAGE = "New user successfully registered";
   const PAGE_NOT_FOUND_MESSAGE = "Page not found";
   const VALIDATION_FAILED_MESSAGE = "Validation failed";
+  const VALIDATION_COUNT_MESSAGE = "The count must be an integer.";
+  const VALIDATION_PAGE_MESSAGE =  "The page must be at least 1.";
 
   // Default pagination parameters
   const PAGE_COUNT = 5;
@@ -106,8 +108,8 @@ class UserController extends Controller
         "page" => "numeric|min:1",
       ],
       $messages = [
-        "count" => "The count must be an integer.",
-        "page" => "The page must be at least 1."
+        "count" => self::VALIDATION_COUNT_MESSAGE,
+        "page" => self::VALIDATION_PAGE_MESSAGE,
       ]
     );
 
