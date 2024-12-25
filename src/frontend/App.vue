@@ -18,7 +18,7 @@ import Users from "./users/Users.vue";
 }
 
 .innerDiv {
-    min-width: 30%;
+    min-width: 70%;
     max-width: 30%;
     align-self: center;
 }

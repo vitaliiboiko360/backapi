@@ -14,13 +14,13 @@ const submit = async (userFormRef) => {
 
         outputResponse.value = await response.json();
     } catch (e) {
-        console.error(e);
+        //console.error(e);
+        // do not clutter console
     }
 };
 
 watch([outputResponse, outputResponseRef], () => {
     if (!(outputResponseRef.value && outputResponse.value)) return;
-    console.log(outputResponse.value);
     const { message, fails = "", user_id = "" } = outputResponse.value;
     outputResponseRef.value.textContent = `${message}${
         fails
@@ -52,14 +52,19 @@ watch([outputResponse, outputResponseRef], () => {
             <p>Name: Username should contain 2-60 characters.</p>
             <input v-model="name" placeholder="name" :name="`name`" />
             <p>Phone: User phone number. Number should start with code of Ukraine +380.</p>
-            <input v-model="phone" placeholder="+380XXXXXXXXX" />
+            <input v-model="phone" placeholder="+380XXXXXXXXX" :name="`phone`" />
             <p>Email: User email, must be a valid email according to RFC2822.</p>
-            <input v-model="email" placeholder="Valid email e.g. name@example.com" />
+            <input v-model="email" placeholder="Valid email e.g. name@example.com" :name="`email`" />
             <p>
                 Position ID: User`s position id. You can get list of all positions with their IDs using the API method
-                GET api/positions.
+                GET
+                <span
+                    ><a :href="`/api/positions`" :target="`_blank`" :rel="`noreferrer noopener`"
+                        >/api/positions</a
+                    ></span
+                >.
             </p>
-            <input v-model="positionId" placeholder="Position ID" />
+            <input v-model="positionId" placeholder="Position ID" :disabled="true" />
             <p>
                 Photo: Minimum size of photo 70x70px. The photo format must be jpeg/jpg type. The photo size must not be
                 greater than 5 Mb.
