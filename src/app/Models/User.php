@@ -31,4 +31,28 @@ class User extends Authenticatable
   protected $casts = [
     self::CREATED_AT => 'datetime:U',
   ];
+
+  /**
+   * Query for a given phone.
+   *
+   * @param  \Illuminate\Database\Eloquent\Builder  $query
+   * @param  string  $phone
+   * @return \Illuminate\Database\Eloquent\Builder
+   */
+  public function scopeOfPhone($query, $phone)
+  {
+    return $query->where("phone", $phone);
+  }
+
+  /**
+   * Query for not expired token's lifetime.
+   *
+   * @param  \Illuminate\Database\Eloquent\Builder  $query
+   * @param  string  $email
+   * @return \Illuminate\Database\Eloquent\Builder
+   */
+  public function scopeOfEmail($query, $email)
+  {
+    return $query->where("email", $email);
+  }
 }

@@ -24,6 +24,7 @@ class UserController extends Controller
   const VALIDATION_FAILED_MESSAGE = "Validation failed";
   const VALIDATION_COUNT_MESSAGE = "The count must be an integer.";
   const VALIDATION_PAGE_MESSAGE =  "The page must be at least 1.";
+  const UNIQUE_PHONE_EMAIL_CONFLICT = "User with this phone or email already exist";
 
   // Default pagination parameters
   const PAGE_COUNT = 5;
@@ -77,13 +78,24 @@ class UserController extends Controller
       ]);
     }
 
-    // Check phone email unique for each user
+    // Check phone email are unique for each user
+    $email = $validated["email"];
+    $phone = $validated["phone"];
+    if (
+      User::ofPhone($phone)->get()->first() != null ||
+      User::ofEmail($email)->get()->first() != null
+    ) {
+      return new JsonResponse([
+        "success" => self::FAILURE,
+        "message" => self::UNIQUE_PHONE_EMAIL_CONFLICT,
+      ], JsonResponse::HTTP_CONFLICT);
+    }
 
-
+    // Save user and report success, finally
     $newUser = User::create([
       "name" => $validated["name"],
-      "email" => $validated["email"],
-      "phone" => $validated["phone"],
+      "email" => $email,
+      "phone" => $phone,
     ]);
     $newUser->save();
     return new JsonResponse([
