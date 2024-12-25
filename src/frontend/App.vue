@@ -1,10 +1,12 @@
-<script setup></script>
+<script setup>
+import Users from "./users/Users.vue";
+</script>
 
 <template>
     <div :class="$style.outerDiv">
         <div :class="$style.innerDiv">
             <h2>Users</h2>
-            <p>test page</p>
+            <Users />
         </div>
     </div>
 </template>
