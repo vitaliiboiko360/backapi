@@ -50,7 +50,7 @@ class UserController extends Controller
     // Authorize
     $token = $request->input("token");
     $isStored = ApiToken::ofToken($token);
-    if ($isStored->get() == null) {
+    if ($isStored->get()->first() == null) {
       return new JsonResponse([
         "success" => self::FAILURE,
         "message" => ApiToken::TOKEN_NOT_FOUND_MESSAGE,
@@ -58,7 +58,7 @@ class UserController extends Controller
     }
 
     $isNotExpired = $isStored->ofNotExpired();
-    if ($isNotExpired->get() == null) {
+    if ($isNotExpired->get()->first() == null) {
       return new JsonResponse([
         "success" => self::FAILURE,
         "message" => ApiToken::TOKEN_EXPIRED_MESSAGE,
