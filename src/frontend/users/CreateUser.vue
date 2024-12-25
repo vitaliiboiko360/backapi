@@ -3,6 +3,12 @@
 <template>
     <div :class="$style.formContainerDiv">
         <h3 :class="$style.formTitleH3">Add New User</h3>
+        <p>
+            Token: you should get a proper token at
+            <span>&nbsp;<a href="/api/token" target="_blank" rel="noreferrer noopener">/api/token</a></span>
+        </p>
+        <input v-mode="token" placeholder="Enter token (128 characters length)" />
+        <p></p>
         <p>Name: Username should contain 2-60 characters.</p>
         <input v-model="name" placeholder="name" />
         <p>Phone: User phone number. Number should start with code of Ukraine +380.</p>
