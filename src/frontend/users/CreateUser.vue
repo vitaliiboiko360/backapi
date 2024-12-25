@@ -1,34 +1,53 @@
-<script setup></script>
+<script setup>
+const outputResponse = (data) => {
+    console.log(JSON.stringify(data));
+};
+
+const submit = async () => {
+    let formData = new FormData(userForm);
+    try {
+        const response = await fetch("/api/users", {
+            method: "POST",
+            body: formData,
+        });
+        outputResponse(await response.json());
+    } catch (e) {
+        console.error(e);
+    }
+};
+</script>
 
 <template>
     <div :class="$style.formContainerDiv">
-        <h3 :class="$style.formTitleH3">Add New User</h3>
-        <p>
-            Token: you should get a proper token at
-            <span>&nbsp;<a href="/api/token" target="_blank" rel="noreferrer noopener">/api/token</a></span>
-        </p>
-        <input v-mode="token" placeholder="Enter token (128 characters length)" />
-        <p></p>
-        <p>Name: Username should contain 2-60 characters.</p>
-        <input v-model="name" placeholder="name" />
-        <p>Phone: User phone number. Number should start with code of Ukraine +380.</p>
-        <input v-model="phone" placeholder="+380XXXXXXXXX" />
-        <p>Email: User email, must be a valid email according to RFC2822.</p>
-        <input v-model="email" placeholder="Valid email e.g. name@example.com" />
-        <p>
-            Position ID: User`s position id. You can get list of all positions with their IDs using the API method GET
-            api/positions.
-        </p>
-        <input v-model="positionId" placeholder="Position ID" />
-        <p>
-            Photo: Minimum size of photo 70x70px. The photo format must be jpeg/jpg type. The photo size must not be
-            greater than 5 Mb.
-        </p>
-        <input :type="`file`" :accept="`image/*,.jpeg,.jpg`" />
+        <form :id="userForm" @submit.prevent="submit">
+            <h3 :class="$style.formTitleH3">Add New User</h3>
+            <p>
+                Token: you should get a proper token at
+                <span>&nbsp;<a href="/api/token" target="_blank" rel="noreferrer noopener">/api/token</a></span>
+            </p>
+            <input v-model="token" placeholder="Enter token (128 characters length)" />
+            <p></p>
+            <p>Name: Username should contain 2-60 characters.</p>
+            <input v-model="name" placeholder="name" />
+            <p>Phone: User phone number. Number should start with code of Ukraine +380.</p>
+            <input v-model="phone" placeholder="+380XXXXXXXXX" />
+            <p>Email: User email, must be a valid email according to RFC2822.</p>
+            <input v-model="email" placeholder="Valid email e.g. name@example.com" />
+            <p>
+                Position ID: User`s position id. You can get list of all positions with their IDs using the API method
+                GET api/positions.
+            </p>
+            <input v-model="positionId" placeholder="Position ID" />
+            <p>
+                Photo: Minimum size of photo 70x70px. The photo format must be jpeg/jpg type. The photo size must not be
+                greater than 5 Mb.
+            </p>
+            <input :type="`file`" :accept="`image/*,.jpeg,.jpg`" />
 
-        <div :class="$style.buttonContainerDiv">
-            <button>Submit</button>
-        </div>
+            <div :class="$style.buttonContainerDiv">
+                <input type="submit" value="Submit" />
+            </div>
+        </form>
     </div>
 </template>
 
