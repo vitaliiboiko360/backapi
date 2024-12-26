@@ -15,7 +15,7 @@ class PhotoUtil
 
   const DEFAULT_PHOTO = "/images/users/default.jpg";
 
-  static private $counter = 0;
+  static private int $counter;
 
   /**
    * @return string
