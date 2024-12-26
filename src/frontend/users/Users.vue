@@ -11,7 +11,6 @@ const getUsers = async () => {
     try {
         const response = await fetch(`/api/users?count=${DEFAULT_NUMBER_OF_USERS_TO_SHOW}&page=${currentPage.value}`);
         outputResponse.value = await response.json();
-        console.log(JSON.stringify(outputResponse.value));
     } catch (e) {
         /** do not clutter console */
     }
@@ -37,7 +36,6 @@ watch(currentPage, getUsers);
             :disabled="outputResponse?.links?.prev_url == null ? true : false"
             @click="
                 () => {
-                    console.log(outputResponse.links.prev_url);
                     currentPage = currentPage - 1;
                 }
             "
@@ -48,7 +46,6 @@ watch(currentPage, getUsers);
             :disabled="outputResponse?.links?.next_url == null ? true : false"
             @click="
                 () => {
-                    console.log(outputResponse.links.next_url);
                     currentPage = Math.min(currentPage + 1, outputResponse.total_pages);
                 }
             "
