@@ -11,7 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\ApiToken;
 use App\Models\User;
-use App\PhotoUtil;
+use App\ImageUtil;
 
 class UserController extends Controller
 {
@@ -91,7 +91,7 @@ class UserController extends Controller
     // Photo processing
     $photo = $request->file("photo");
     if ($photo != null) {
-      $photoPathToGet = PhotoUtil::storeImageFileReturnPath($photo);
+      $photoPathToGet = ImageUtil::storeImageFileReturnPath($photo);
     }
 
     // Save user and report success, finally
@@ -146,7 +146,7 @@ class UserController extends Controller
    * @param \Illuminate\Http\Request $request
    * @return \Illuminate\Http\JsonResponse
    */
-  public function users(Request $request)
+  public function returnUsersAsJson(Request $request)
   {
     $count = $request->query("count", self::PAGE_COUNT);
     $page = $request->query("page", self::PAGE_NUMBER);

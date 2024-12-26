@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Constants;
+use App\ImageUtil;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
  */
 class UserFactory extends Factory
 {
-  const UKRAINE_MOBILE_CODES = ["66", "99", "95", "50", "68", "96", "86", "63", "93"];
   /**
    * Define the model's default state.
    *
@@ -21,7 +21,8 @@ class UserFactory extends Factory
     return [
       "name" => $this->faker->name(),
       "email" => $this->faker->unique()->safeEmail(),
-      "phone" => "+380" . array_rand(self::UKRAINE_MOBILE_CODES) . strval($this->faker->unique()->numberBetween(1000000, 9999999)),
+      "phone" => "+380" . array_rand(Constants::UKRAINE_MOBILE_CODES) . strval($this->faker->unique()->numberBetween(1000000, 9999999)),
+      "photo" => ImageUtil::DEFAULT_PHOTO,
       "registration_timestamp" => now()->getTimestamp(),
       "updated_timestamp" => now()->getTimestamp(),
     ];
