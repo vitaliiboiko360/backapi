@@ -3,9 +3,9 @@
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\PositionController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -32,3 +32,5 @@ Route::get("/token", [ApiTokenController::class, "createTokenAndReturnAsJson"]);
 Route::post("/users", [UserController::class, "processStoreUserRequest"]);
 
 Route::get("/users", [UserController::class, "users"]);
+
+Route::get("/positions", [PositionController::class, "returnAsJsonResponse"]);

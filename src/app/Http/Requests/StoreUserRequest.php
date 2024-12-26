@@ -3,7 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use  Illuminate\Contracts\Validation\Validator;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Rules\File;
+use Illuminate\Validation\Rule;
+
+use App\Constants;
 
 class StoreUserRequest extends FormRequest
 {
@@ -13,7 +17,9 @@ class StoreUserRequest extends FormRequest
   const VALIDATION_ERROR_PHONE_REQUIRED = "The phone field is required";
   const VALIDATION_ERROR_PHONE_FORMAT = "Phone number should start with code of Ukraine +380 and contain 9 digits after code.";
   const VALIDATION_ERROR_POSITION_ID = "The position id must be an integer.";
-  const VALIDATION_ERROR_PHOTO_SIZE = "The photo may not be greater than 5 Mbytes.";
+  const VALIDATION_ERROR_PHOTO_MAXSIZE = "The photo may not be greater than 5 Mbytes.";
+  const VALIDATION_ERROR_PHOTO_DIMS = "Minimum size of the photo must be 70x70px.";
+  const VALIDATION_ERROR_PHOTO_FORMAT = "The photo format must be jpeg/jpg type.";
 
   public function __construct()
   {
@@ -48,6 +54,14 @@ class StoreUserRequest extends FormRequest
       "name" => "required|min:2|max:60",
       "email" => "required|email:rfc",
       "phone" => "required|regex:/^\+380[0-9]{9}$/",
+      "photo" => [
+        File::image()
+          ->types(["jpeg", "jpg"])
+          ->max(Constants::PHOTO_MAX_FILESIZE)
+          ->dimensions(Rule::dimensions()
+            ->minWidth(Constants::PHOTO_MIN_DIM_WIDTH)
+            ->minHeight(Constants::PHOTO_MIN_DIM_HEIGHT)),
+      ]
     ];
   }
 
@@ -67,7 +81,9 @@ class StoreUserRequest extends FormRequest
       "phone.required" => self::VALIDATION_ERROR_PHONE_FORMAT,
       "phone.regex" => self::VALIDATION_ERROR_PHONE_FORMAT,
       "position_id" => self::VALIDATION_ERROR_POSITION_ID,
-      "photo" => self::VALIDATION_ERROR_PHOTO_SIZE,
+      "photo.max" => self::VALIDATION_ERROR_PHOTO_MAXSIZE,
+      "photo.dimensions" => self::VALIDATION_ERROR_PHOTO_DIMS,
+      "photo.types" => self::VALIDATION_ERROR_PHOTO_FORMAT,
     ];
   }
 

@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-
 use Illuminate\Validation\ValidationException;
-
-use App\Models\ApiToken;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
-use Illuminate\Http\Request;
+use App\Models\ApiToken;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
+use App\PhotoUtil;
 
 class UserController extends Controller
 {
@@ -75,15 +73,14 @@ class UserController extends Controller
         "success" => self::FAILURE,
         "message" => StoreUserRequest::VALIDATION_FAILED_MESSAGE,
         "fails" => $validator->errors(),
-      ]);
+      ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     // Check phone email are unique for each user
     $email = $validated["email"];
     $phone = $validated["phone"];
     if (
-      User::ofPhone($phone)->get()->first() != null ||
-      User::ofEmail($email)->get()->first() != null
+      User::ofPhoneOrEmail($phone, $email)->get()->first() != null
     ) {
       return new JsonResponse([
         "success" => self::FAILURE,
@@ -91,20 +88,30 @@ class UserController extends Controller
       ], JsonResponse::HTTP_CONFLICT);
     }
 
+    // Photo processing
+    $photo = $request->file("photo");
+    if ($photo != null) {
+      $photoPathToGet = PhotoUtil::storeImageFileReturnPath($photo);
+    }
+
     // Save user and report success, finally
     $newUser = User::create([
       "name" => $validated["name"],
       "email" => $email,
       "phone" => $phone,
+      "photo" => $photoPathToGet,
     ]);
     $newUser->save();
+    // set token is used
+    $isNotExpired->is_used_already = true;
+    $isNotExpired->save();
+
     return new JsonResponse([
       "success" => self::SUCCESS,
       "user_id" => $newUser->id,
       "message" => self::SUCCESS_MESSAGE,
-    ]);
+    ], JsonResponse::HTTP_CREATED);
   }
-
 
   /**
    * @param array $urlQueryParams

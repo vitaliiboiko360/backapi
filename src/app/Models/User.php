@@ -14,6 +14,13 @@ class User extends Authenticatable
   const UPDATED_AT = "updated_timestamp";
   const TABLE_NAME = "users";
 
+  /**
+   * The table associated with the model.
+   *
+   * @var string
+   */
+  protected $table = self::TABLE_NAME;
+
   protected $dateFormat = "U";
 
   /**
@@ -33,19 +40,21 @@ class User extends Authenticatable
   ];
 
   /**
-   * Query for a given phone.
+   * Query for a given phone or email.
    *
    * @param  \Illuminate\Database\Eloquent\Builder  $query
    * @param  string  $phone
    * @return \Illuminate\Database\Eloquent\Builder
    */
-  public function scopeOfPhone($query, $phone)
+  public function scopeOfPhoneOrEmail($query, $phone, $email)
   {
-    return $query->where("phone", $phone);
+    return $query
+      ->where("phone", $phone)
+      ->orWhere("email", $email);
   }
 
   /**
-   * Query for not expired token's lifetime.
+   * Query for a given email
    *
    * @param  \Illuminate\Database\Eloquent\Builder  $query
    * @param  string  $email
