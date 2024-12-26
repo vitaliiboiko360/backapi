@@ -160,9 +160,10 @@ class UserController extends Controller
     }
 
     // Check if $page not overflow total pages number
+    // Adjust totalPages + 1 if we have remainded number of records to show
     $total = User::count();
-    $totalPages = max($total / $count, 1);
-    if ($page > $totalPages) {
+    $totalPages = max((int)$total / (int)$count, 1);
+    if ($page > ((int)$total % (int)$count > 0 ? $totalPages + 1 : $totalPages)) {
       return new JsonResponse([
         "success" => self::FAILURE,
         "message" => self::PAGE_NOT_FOUND_MESSAGE,
