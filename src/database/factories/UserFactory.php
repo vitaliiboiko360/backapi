@@ -21,7 +21,7 @@ class UserFactory extends Factory
     return [
       "name" => $this->faker->name(),
       "email" => $this->faker->unique()->safeEmail(),
-      "phone" => "+380" . array_rand(Constants::UKRAINE_MOBILE_CODES) . strval($this->faker->unique()->numberBetween(1000000, 9999999)),
+      "phone" => "+380" . Constants::UKRAINE_MOBILE_CODES[array_rand(Constants::UKRAINE_MOBILE_CODES)] . strval($this->faker->unique()->numberBetween(1000000, 9999999)),
       "photo" => ImageUtil::DEFAULT_PHOTO,
       "registration_timestamp" => now()->getTimestamp(),
       "updated_timestamp" => now()->getTimestamp(),

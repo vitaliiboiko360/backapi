@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-\Tinify\setKey(env("TINY_KEY"));
+\Tinify\setKey(config('app.tiny_key'));
 
 class ImageUtil
 {
@@ -15,34 +15,33 @@ class ImageUtil
 
   const DEFAULT_PHOTO = "/images/users/default.jpg";
 
-  static private int $counter;
-
   /**
    * @return string
    */
   static public function getNextFileName()
   {
-    return hexdec((int)Carbon::today()->format("Ymd") + self::$counter++) . ".jpg";
+    return dechex((int)Carbon::now()->timestamp) . ".jpg";
   }
 
   /**
    *  
    * @return string
    */
-  static public function storeImageFileReturnPath($photo)
+  static public function storeImageFileReturnUriPath($photo)
   {
-    $imageSource = \Tinify\fromBuffer($photo)->toBuffer();
-    $resized = $imageSource->resize([
+    $source = \Tinify\fromFile($photo);
+    $resized = $source->resize([
       "method" => "cover",
       "width" => ImageUtil::PHOTO_MIN_DIM_WIDTH,
       "height" => ImageUtil::PHOTO_MIN_DIM_HEIGHT,
     ]);
 
-    $relativePath = "/images/users/" . self::getNextFileName();
-    if (! Storage::disk("public")->put($relativePath, $resized)) {
-      error_log("Image file could not be saved at path: " . $relativePath);
-      return self::DEFAULT_PHOTO;
+    $fileName = self::getNextFileName();
+    $relPath = "/images/users/" . $fileName;
+    if (Storage::put($relPath, $resized->toBuffer())) {
+      return $relPath;
     }
-    return $relativePath;
+    error_log("Image file could not be saved at path: " . $relPath);
+    return self::DEFAULT_PHOTO;
   }
 }

@@ -69,7 +69,7 @@ watch([outputResponse, outputResponseRef], () => {
                 Photo: Minimum size of photo 70x70px. The photo format must be jpeg/jpg type. The photo size must not be
                 greater than 5 Mb.
             </p>
-            <input :type="`file`" :accept="`image/*,.jpeg,.jpg`" />
+            <input :type="`file`" :accept="`image/*,.jpeg,.jpg`" :name="`photo`" />
 
             <div :class="$style.buttonContainerDiv">
                 <input :type="`submit`" :value="Submit" />

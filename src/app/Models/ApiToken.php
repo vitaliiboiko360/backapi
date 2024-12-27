@@ -82,7 +82,6 @@ class ApiToken extends Model
   {
     return Attribute::make(
       get: fn($value) => ($value),
-      set: fn(string $value) => ($value),
     );
   }
 
@@ -106,7 +105,7 @@ class ApiToken extends Model
    * @param  string  $token
    * @return \Illuminate\Database\Eloquent\Builder
    */
-  public function scopeOfToken($query, $token)
+  public function scopeAsToken($query, $token)
   {
     return $query->where(self::TOKEN, $token);
   }
@@ -117,7 +116,7 @@ class ApiToken extends Model
    * @param  \Illuminate\Database\Eloquent\Builder  $query
    * @return \Illuminate\Database\Eloquent\Builder
    */
-  public function scopeOfNotExpired($query)
+  public function scopeNotExpired($query)
   {
     return $query
       ->where(

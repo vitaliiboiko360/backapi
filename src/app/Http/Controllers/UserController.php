@@ -48,16 +48,16 @@ class UserController extends Controller
   {
     // Authorize
     $token = $request->input("token");
-    $isStored = ApiToken::ofToken($token);
-    if ($isStored->get()->first() == null) {
+    $asToken = ApiToken::asToken($token);
+    if ($asToken->get()->first() == null) {
       return new JsonResponse([
         "success" => self::FAILURE,
         "message" => ApiToken::TOKEN_NOT_FOUND_MESSAGE,
       ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-    $isNotExpired = $isStored->ofNotExpired();
-    if ($isNotExpired->get()->first() == null) {
+    $notExpired = $asToken->notExpired();
+    if ($notExpired->get()->first() == null) {
       return new JsonResponse([
         "success" => self::FAILURE,
         "message" => ApiToken::TOKEN_EXPIRED_MESSAGE,
@@ -89,10 +89,8 @@ class UserController extends Controller
     }
 
     // Photo processing
-    $photo = $request->file("photo");
-    if ($photo != null) {
-      $photoPathToGet = ImageUtil::storeImageFileReturnPath($photo);
-    }
+    $photo = $request->photo;
+    $photoPathToGet = $photo != null ? ImageUtil::storeImageFileReturnUriPath($photo) : ImageUtil::DEFAULT_PHOTO;
 
     // Save user and report success, finally
     $newUser = User::create([
@@ -103,8 +101,7 @@ class UserController extends Controller
     ]);
     $newUser->save();
     // set token is used
-    $isNotExpired->is_used_already = true;
-    $isNotExpired->save();
+    $asToken->update(["is_used_already" => true]);
 
     return new JsonResponse([
       "success" => self::SUCCESS,
