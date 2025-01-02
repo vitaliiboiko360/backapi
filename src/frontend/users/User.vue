@@ -1,6 +1,12 @@
 <script setup>
 import { defineProps } from "vue";
-const { name = "", phone = "", email = "", photo = "" } = defineProps(["name", "phone", "email", "photo"]);
+const {
+    name = "",
+    phone = "",
+    email = "",
+    photo = "",
+    position = "",
+} = defineProps(["name", "phone", "email", "photo", "position"]);
 </script>
 
 <template>
@@ -11,6 +17,7 @@ const { name = "", phone = "", email = "", photo = "" } = defineProps(["name", "
                 <p>Name: {{ name }}</p>
                 <p>Phone: {{ phone }}</p>
                 <p>Email: {{ email }}</p>
+                <p>Postion: {{ position }}</p>
             </div>
         </div>
     </div>
@@ -28,6 +35,8 @@ p {
 }
 .divOuter {
     display: flex;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
 }
 .divUserCard {
     display: flex;

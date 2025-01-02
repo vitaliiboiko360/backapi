@@ -64,7 +64,7 @@ watch([outputResponse, outputResponseRef], () => {
                     ></span
                 >.
             </p>
-            <input v-model="positionId" placeholder="Position ID" :disabled="true" />
+            <input v-model="positionId" placeholder="Position ID" :name="`position_id`" />
             <p>
                 Photo: Minimum size of photo 70x70px. The photo format must be jpeg/jpg type. The photo size must not be
                 greater than 5 Mb.

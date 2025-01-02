@@ -12,6 +12,8 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\ApiToken;
 use App\Models\User;
 use App\ImageUtil;
+use App\Models\Position;
+use App\Constants;
 
 class UserController extends Controller
 {
@@ -98,6 +100,7 @@ class UserController extends Controller
       "email" => $email,
       "phone" => $phone,
       "photo" => $photoPathToGet,
+      "position_id" => $validated["position_id"],
     ]);
     $newUser->save();
     // set token is used
@@ -182,6 +185,19 @@ class UserController extends Controller
       $page = $page,
     );
 
+    // td
+    $withPositionTitle = array();
+    foreach ($paginator->items() as $item) {
+      $id = $item["position_id"];
+      $item["position"] =
+        ($id >= Constants::POSITION_ID_MIN && $id <= Constants::POSITION_ID_MAX)
+        ?
+        Position::find($id)->name
+        :
+        Constants::POSITION_NOT_ASSIGNED;
+      $withPositionTitle[] = $item;
+    }
+
     return new JsonResponse([
       "success" => self::SUCCESS,
       "page" => $paginator->currentPage(),
@@ -192,7 +208,7 @@ class UserController extends Controller
         "next_url" => $paginator->nextPageUrl(),
         "prev_url" => $paginator->previousPageUrl(),
       ],
-      "users" => $paginator->items(),
+      "users" => $withPositionTitle,
     ]);
   }
 }

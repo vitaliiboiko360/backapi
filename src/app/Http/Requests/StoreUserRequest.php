@@ -20,6 +20,7 @@ class StoreUserRequest extends FormRequest
   const VALIDATION_ERROR_PHOTO_MAXSIZE = "The photo may not be greater than 5 Mbytes.";
   const VALIDATION_ERROR_PHOTO_DIMS = "Minimum size of the photo must be 70x70px.";
   const VALIDATION_ERROR_PHOTO_FORMAT = "The photo format must be jpeg/jpg type.";
+  const VALIDATION_ERROR_POSITION_RANGE = "Positions not found";
 
   public function __construct()
   {
@@ -54,6 +55,7 @@ class StoreUserRequest extends FormRequest
       "name" => "required|min:2|max:60",
       "email" => "required|email:rfc",
       "phone" => "required|regex:/^\+380[0-9]{9}$/",
+      "position_id" => "required|numeric|min:" . strval(Constants::POSITION_ID_MIN) . "|max:" . strval(Constants::POSITION_ID_MAX),
       "photo" => [
         File::image()
           ->types(["jpeg", "jpg"])
@@ -80,10 +82,13 @@ class StoreUserRequest extends FormRequest
       "email.email" => self::VALIDATION_ERROR_EMAIL,
       "phone.required" => self::VALIDATION_ERROR_PHONE_FORMAT,
       "phone.regex" => self::VALIDATION_ERROR_PHONE_FORMAT,
-      "position_id" => self::VALIDATION_ERROR_POSITION_ID,
       "photo.max" => self::VALIDATION_ERROR_PHOTO_MAXSIZE,
       "photo.dimensions" => self::VALIDATION_ERROR_PHOTO_DIMS,
       "photo.types" => self::VALIDATION_ERROR_PHOTO_FORMAT,
+      "position_id.required" => self::VALIDATION_ERROR_POSITION_ID,
+      "position_id.numeric" => self::VALIDATION_ERROR_POSITION_ID,
+      "position_id.min" => self::VALIDATION_ERROR_POSITION_RANGE,
+      "position_id.max" => self::VALIDATION_ERROR_POSITION_RANGE,
     ];
   }
 

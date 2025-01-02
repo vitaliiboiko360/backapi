@@ -8,4 +8,8 @@ class Constants
   const PHOTO_MAX_FILESIZE = 5 * 1024;
   const PHOTO_MIN_DIM_HEIGHT = 70;
   const PHOTO_MIN_DIM_WIDTH = 70;
+
+  const POSITION_ID_MIN = 1;
+  const POSITION_ID_MAX = 6;
+  const POSITION_NOT_ASSIGNED = "Not assigned";
 }

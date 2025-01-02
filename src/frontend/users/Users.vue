@@ -29,6 +29,7 @@ watch(currentPage, getUsers);
             :email="user.email"
             :phone="user.phone"
             :photo="user.photo"
+            :position="user.position"
         />
     </div>
     <div>
