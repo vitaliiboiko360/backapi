@@ -17,7 +17,7 @@ const {
                 <p>Name: {{ name }}</p>
                 <p>Phone: {{ phone }}</p>
                 <p>Email: {{ email }}</p>
-                <p>Postion: {{ position }}</p>
+                <p>Position: {{ position }}</p>
             </div>
         </div>
     </div>
