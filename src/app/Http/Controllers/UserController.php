@@ -188,11 +188,11 @@ class UserController extends Controller
     // td
     $withPositionTitle = array();
     foreach ($paginator->items() as $item) {
-      $id = $item["position_id"];
+      $positionId = $item["position_id"];
       $item["position"] =
-        ($id >= Constants::POSITION_ID_MIN && $id <= Constants::POSITION_ID_MAX)
+        ($positionId >= Constants::POSITION_ID_MIN && $positionId <= Constants::POSITION_ID_MAX)
         ?
-        Position::find($id)->name
+        (Position::find($positionId)->name ?: Constants::POSITION_NOT_ASSIGNED)
         :
         Constants::POSITION_NOT_ASSIGNED;
       $withPositionTitle[] = $item;
