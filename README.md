@@ -14,9 +14,7 @@ The template includes
 
 Also used:
 
-For frontend Vue.js 3 is used. Vite for bundling
-
-Backend+Frontend where the api is running at, you could found here [http://abz-testapi.ddns.net](http://abz-testapi.ddns.net)
+For frontend Vue.js 3 is used. Vite for bundling  
 
 --  
   
@@ -27,14 +25,14 @@ POST  /api/users
 GET  /api/users  
 
 2. Data generation / seeders implemented  
-for 45 users, close to real-world input  
+lose to real-world input  
 
 3. Add new user POST request - processes image according to TinyPNG API "cover" mode   
 with required dimensions and format.    
 Authorization token could be used to register one user only. And once issued, the token expires after 40 minutes.  
 
 4. Frontend is using Vue.js 3 Composition API.  
-There is no "Show more" button, but rather there're two buttons Next and Previous page.  
+There are Next and Previous page buttons.  
 Users are shown by 6 entries per page.   
 Intentionally, there's no client-side validation at Frontend part but validation performed at Backend part.  
 All errors and successes are reported to the user in the UI.     
