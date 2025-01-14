@@ -25,14 +25,14 @@ POST  /api/users
 GET  /api/users  
 
 2. Data generation / seeders implemented  
-lose to real-world input  
+close to real-world input  
 
 3. Add new user POST request - processes image according to TinyPNG API "cover" mode   
 with required dimensions and format.    
 Authorization token could be used to register one user only. And once issued, the token expires after 40 minutes.  
 
 4. Frontend is using Vue.js 3 Composition API.  
-There are Next and Previous page buttons.  
+There are Next and Previous page buttons to paginate results from backend.  
 Users are shown by 6 entries per page.   
 Intentionally, there's no client-side validation at Frontend part but validation performed at Backend part.  
 All errors and successes are reported to the user in the UI.     
