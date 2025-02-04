@@ -44,8 +44,3 @@ TinyPNG API is used for image resizing.
 Comments On Solution:  
 Solution only includes files that were created/edited and only files that directly provide backend solution.  
 A lot of template boilerplate code and configuration files were excluded.  
-
-On Code Quality:  
-frontend Vue code is packed into minimum number of files, however you could check my other projects here on github, where my Vue code  is maintained much nicer. Assuming, main focus is on backend, but frontend is an important part of this solution too. Too much logic has been put in a little number of files. In production code we usually aim towards better decoupling and composition.  
-
-For php Laravel specifically, there was an effort to keep Model and Controller concerns separated as much as possible. However due to the requirement that we have to return several different statuses from one request, those methods appeared to be overloaded with logic.
